@@ -1,6 +1,45 @@
 @JwtAuthExample_HostAddress = http://localhost:5291
 
-GET {{JwtAuthExample_HostAddress}}/weatherforecast/
+### 1) Login as admin and capture the JWT in the `login` response variable
+# @name login
+POST {{JwtAuthExample_HostAddress}}/api/auth/login
+Content-Type: application/json
+
+{
+  "username": "admin",
+  "password": "Admin123!"
+}
+
+### 2) Access a protected endpoint using the captured JWT
+GET {{JwtAuthExample_HostAddress}}/api/values
+Authorization: Bearer {{login.response.body.$.token}}
 Accept: application/json
 
-###
+### 3) Access an admin-only endpoint (Admin role required)
+GET {{JwtAuthExample_HostAddress}}/api/values/admin
+Authorization: Bearer {{login.response.body.$.token}}
+Accept: application/json
+
+### 4) Login as a regular user and capture the JWT
+# @name loginUser
+POST {{JwtAuthExample_HostAddress}}/api/auth/login
+Content-Type: application/json
+
+{
+  "username": "user",
+  "password": "User123!"
+}
+
+### 5) Protected endpoint with the regular user's JWT
+GET {{JwtAuthExample_HostAddress}}/api/values
+Authorization: Bearer {{loginUser.response.body.$.token}}
+Accept: application/json
+
+### 6) Admin-only endpoint with the regular user's JWT -> 403 Forbidden
+GET {{JwtAuthExample_HostAddress}}/api/values/admin
+Authorization: Bearer {{loginUser.response.body.$.token}}
+Accept: application/json
+
+### 7) Protected endpoint without a JWT -> 401 Unauthorized
+GET {{JwtAuthExample_HostAddress}}/api/values
+Accept: application/json

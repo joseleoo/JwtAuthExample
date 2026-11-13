@@ -6,6 +6,9 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace JwtAuthExample.Services;
 
+// SIMULATED EXTERNAL SERVICE: stand-in for the token-issuing logic of a real
+// auth server / identity provider (e.g., IdentityServer, Entra ID, Auth0).
+// No network calls are made; signing happens locally.
 public class TokenService
 {
     public string GenerateToken(int userId, string username, IEnumerable<string> roles)

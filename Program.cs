@@ -9,6 +9,9 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 
+// SIMULATED AUTH SERVER CONFIG: tokens are validated with the same hardcoded
+// key. In production, validation would use the identity provider's published
+// keys/metadata endpoint instead.
 var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(JwtSettings.Key));
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
